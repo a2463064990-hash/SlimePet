@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 拖动条 -->
+  <div id="titlebar">
+    <span>🫧 SlimePet</span>
+    <button onclick="closeApp()">✕</button>
+  </div>
+
+  <!-- 史莱姆 -->
+  <img id="slime" src="./images/slime.png">
+
+  <!-- 时间和番茄钟 -->
+  <div id="clock"></div>
+  <div id="pomodoro">
+    <div id="timer">25:00</div>
+    <button onclick="startTimer()">▶ 开始</button>
+    <button onclick="resetTimer()">↺ 重置</button>
+  </div>
+  <!-- 备忘录 -->
+<div id="memo">
+  <div class="memo-title">📝 今日</div>
+  <textarea id="truth" placeholder="一句真实的话..."></textarea>
+  <textarea id="inspire" placeholder="一句灵感..."></textarea>
+</div>
+
+  <script>
+    const { ipcRenderer } = require('electron')
+
+    // 关闭窗口
+    function closeApp() {
+      require('electron').remote?.getCurrentWindow().close()
+      window.close()
+    }
+
+    // 实时时钟
+    function updateClock() {
+      const now = new Date()
+      const h = String(now.getHours()).padStart(2,'0')
+      const m = String(now.getMinutes()).padStart(2,'0')
+      const s = String(now.getSeconds()).padStart(2,'0')
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`
+    }
+    setInterval(updateClock, 1000)
+    updateClock()
+
+    // 番茄钟
+    let totalSeconds = 25 * 60
+    let countdown = null
+    let running = false
+
+    function startTimer() {
+      if (running) return
+      running = true
+      countdown = setInterval(() => {
+        totalSeconds--
+        if (totalSeconds <= 0) {
+          clearInterval(countdown)
+          running = false
+          document.getElementById('timer').textContent = '00:00'
+          alert('🍅 番茄钟结束！休息一下吧')
+          return
+        }
+        const m = String(Math.floor(totalSeconds / 60)).padStart(2,'0')
+        const s = String(totalSeconds % 60).padStart(2,'0')
+        document.getElementById('timer').textContent = `${m}:${s}`
+      }, 1000)
+    }
+
+    function resetTimer() {
+      clearInterval(countdown)
+      running = false
+      totalSeconds = 25 * 60
+      document.getElementById('timer').textContent = '25:00'
+    }
+
+    // 史莱姆动画
+    const slime = document.getElementById('slime')
+    let scale = 1
+    let growing = true
+    setInterval(() => {
+      if (growing) { scale += 0.01; if (scale >= 1.1) growing = false }
+      else { scale -= 0.01; if (scale <= 0.9) growing = true }
+      slime.style.transform = `scale(${scale})`
+    }, 50)
+  </script>
+</body>
+</html>

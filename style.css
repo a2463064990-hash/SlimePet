@@ -1,0 +1,106 @@
+@font-face {
+  font-family: 'ShiGuang';
+  src: url('./fonts/PingFangSaTuoTi-2.ttf');
+}
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: rgba(15, 20, 40, 0.92);
+  color: white;
+  font-family: 'ShiGuang',sans-serif;
+  border-radius: 16px;
+  overflow: hidden;
+  user-select: none;
+}
+
+#titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  -webkit-app-region: drag; /* 拖动窗口 */
+  cursor: move;
+}
+
+#titlebar button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-app-region: no-drag;
+}
+
+#slime {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: block;
+  margin: 20px auto 10px;
+}
+
+#clock {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #88ccff;
+}
+
+#pomodoro {
+  text-align: center;
+  margin-top: 16px;
+}
+
+#timer {
+  font-size: 48px;
+  font-weight: bold;
+  color: #ff8888;
+  margin-bottom: 10px;
+}
+
+button {
+  margin: 4px;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background: rgba(255,255,255,0.25);
+}
+#memo {
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+
+.memo-title {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 6px;
+}
+
+#memo textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'ShiGuang', sans-serif;
+  font-size: 23px;
+  padding: 8px;
+  resize: none;
+  height: 50px;
+  margin-bottom: 6px;
+  outline: none;
+}
+
+#memo textarea:focus {
+  background: rgba(255,255,255,0.13);
+}
