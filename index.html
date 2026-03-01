@@ -5,39 +5,35 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 拖动条 -->
   <div id="titlebar">
     <span>🫧 SlimePet</span>
     <button onclick="closeApp()">✕</button>
   </div>
 
-  <!-- 史莱姆 -->
   <img id="slime" src="./images/slime.png">
-
-  <!-- 时间和番茄钟 -->
   <div id="clock"></div>
+
   <div id="pomodoro">
+    <!-- 时长选择 -->
+    <div id="duration-btns">
+      <button onclick="setDuration(15)" id="btn-15">15</button>
+      <button onclick="setDuration(25)" id="btn-25" class="active">25</button>
+      <button onclick="setDuration(45)" id="btn-45">45</button>
+    </div>
     <div id="timer">25:00</div>
+    <div id="today-count">今日完成：<span id="count">0</span> 个🍅</div>
     <button onclick="startTimer()">▶ 开始</button>
     <button onclick="resetTimer()">↺ 重置</button>
   </div>
-  <!-- 备忘录 -->
-<div id="memo">
-  <div class="memo-title">📝 今日</div>
-  <textarea id="truth" placeholder="一句真实的话..."></textarea>
-  <textarea id="inspire" placeholder="一句灵感..."></textarea>
-</div>
+
+  <div id="memo">
+    <div class="memo-title">📝 今日</div>
+    <textarea id="truth" placeholder="一句真实的话..."></textarea>
+    <textarea id="inspire" placeholder="一句灵感..."></textarea>
+  </div>
 
   <script>
-   function closeApp() {
-  window.close()
-}
-
-    // 关闭窗口
-    function closeApp() {
-      require('electron').remote?.getCurrentWindow().close()
-      window.close()
-    }
+    function closeApp() { window.close() }
 
     // 实时时钟
     function updateClock() {
@@ -51,9 +47,20 @@
     updateClock()
 
     // 番茄钟
-    let totalSeconds = 25 * 60
+    let selectedMinutes = 25
+    let totalSeconds = selectedMinutes * 60
     let countdown = null
     let running = false
+
+    function setDuration(min) {
+      if (running) return
+      selectedMinutes = min
+      totalSeconds = min * 60
+      const m = String(min).padStart(2,'0')
+      document.getElementById('timer').textContent = `${m}:00`
+      document.querySelectorAll('#duration-btns button').forEach(b => b.classList.remove('active'))
+      document.getElementById('btn-' + min).classList.add('active')
+    }
 
     function startTimer() {
       if (running) return
@@ -64,7 +71,12 @@
           clearInterval(countdown)
           running = false
           document.getElementById('timer').textContent = '00:00'
-          alert('🍅 番茄钟结束！休息一下吧')
+          // 完成一个番茄
+          let count = parseInt(localStorage.getItem('todayCount') || '0') + 1
+          localStorage.setItem('todayCount', count)
+          document.getElementById('count').textContent = count
+          alert('🍅 完成！休息一下吧')
+          resetTimer()
           return
         }
         const m = String(Math.floor(totalSeconds / 60)).padStart(2,'0')
@@ -76,20 +88,35 @@
     function resetTimer() {
       clearInterval(countdown)
       running = false
-      totalSeconds = 25 * 60
-      document.getElementById('timer').textContent = '25:00'
+      totalSeconds = selectedMinutes * 60
+      const m = String(selectedMinutes).padStart(2,'0')
+      document.getElementById('timer').textContent = `${m}:00`
     }
 
     // 史莱姆动画
     const slime = document.getElementById('slime')
-    let scale = 1
-    let growing = true
+    let scale = 1, growing = true
     setInterval(() => {
       if (growing) { scale += 0.01; if (scale >= 1.1) growing = false }
       else { scale -= 0.01; if (scale <= 0.9) growing = true }
       slime.style.transform = `scale(${scale})`
     }, 50)
+
+    // 本地存储 - 备忘录
+    const truthEl = document.getElementById('truth')
+    const inspireEl = document.getElementById('inspire')
+    truthEl.value = localStorage.getItem('truth') || ''
+    inspireEl.value = localStorage.getItem('inspire') || ''
+    truthEl.addEventListener('input', () => localStorage.setItem('truth', truthEl.value))
+    inspireEl.addEventListener('input', () => localStorage.setItem('inspire', inspireEl.value))
+
+    // 本地存储 - 今日番茄数（每天重置）
+    const today = new Date().toDateString()
+    if (localStorage.getItem('countDate') !== today) {
+      localStorage.setItem('countDate', today)
+      localStorage.setItem('todayCount', '0')
+    }
+    document.getElementById('count').textContent = localStorage.getItem('todayCount') || '0'
   </script>
 </body>
-
 </html>
