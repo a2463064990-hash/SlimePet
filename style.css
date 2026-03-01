@@ -100,7 +100,28 @@ button:hover {
   margin-bottom: 6px;
   outline: none;
 }
+#duration-btns {
+  margin-bottom: 8px;
+}
+
+#duration-btns button {
+  padding: 4px 12px;
+  font-size: 13px;
+  background: rgba(255,255,255,0.1);
+}
+
+#duration-btns button.active {
+  background: rgba(255,100,100,0.4);
+  color: white;
+}
+
+#today-count {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
 
 #memo textarea:focus {
   background: rgba(255,255,255,0.13);
+
 }
