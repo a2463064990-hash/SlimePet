@@ -29,7 +29,9 @@
 </div>
 
   <script>
-    const { ipcRenderer } = require('electron')
+   function closeApp() {
+  window.close()
+}
 
     // 关闭窗口
     function closeApp() {
@@ -89,4 +91,5 @@
     }, 50)
   </script>
 </body>
+
 </html>
